@@ -100,7 +100,7 @@ input[type=range]::-moz-range-thumb { width: 26px; height: 26px; border-radius: 
 .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .tile { background: #34332e; border-radius: 2px; position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 8px; min-width: 0; }
 .tile img { width: 58%; aspect-ratio: 1; object-fit: contain; }
-.tile .amt { position: absolute; right: 5px; top: 4px; font-weight: 700; color: var(--white); font-size: 13px; text-shadow: 0 1px 2px #000; }
+.tile .amt { position: absolute; right: 4px; top: 3px; font-weight: 700; color: var(--white); font-size: 12px; text-shadow: 0 1px 2px #000; }
 .tile .pct { margin-top: auto; width: 100%; text-align: center; font-weight: 700; font-size: 17px; color: var(--white); padding: 3px 0 4px; }
 .tile .nm { font-size: 10px; color: var(--muted); text-align: center; line-height: 1.05; padding: 2px 3px 0; height: 24px; overflow: hidden; }
 .tile.gun .pct { background: rgba(123,167,54,.35); }
@@ -295,7 +295,7 @@ summary::before { content: "▸ "; } details[open] summary::before { content: "�
         <button data-m="3">Если посмотреть все 3</button>
       </div>
       <div class="tiles" id="tiles"></div>
-      <div class="note">Конюх выбирает 2 случайных предмета и добивает остаток скрапом. Не понравилось — «Not good enough», всего 3 предложения. Справа сверху — сколько штук в среднем: у кучных наград количество случайное.</div>
+      <div class="note">Конюх выбирает 2 случайных предмета и добивает остаток скрапом. Не понравилось — «Not good enough», всего 3 предложения. Справа сверху — сколько штук бывает: количество каждый раз случайное, конюх тратит на предмет случайную часть бюджета.</div>
 
       <details>
         <summary>Как посчитано</summary>
@@ -623,9 +623,9 @@ function update() {
   const items = noSale ? [] : Object.keys(NAMES).filter((k) => lastRes[k][key] >= 0.005)
     .sort((a, b) => lastRes[b][key] - lastRes[a][key]);
   $("tiles").innerHTML = items.map((k) => {
-    const r = lastRes[k], amt = r.max > 1 ? Math.round(r.avg) : 1;
+    const r = lastRes[k], amt = r.max <= 1 ? "" : r.min === r.max ? "x" + r.max : `${r.min}–${r.max}`;
     return `<div class="tile ${GUNS.has(k) ? "gun" : ""} ${lastRes[k][key] < 0.05 ? "low" : ""}">
-      <span class="amt">${amt > 1 ? "x" + amt : ""}</span><img src="${ICONS[k]}" alt=""><div class="nm">${NAMES[k]}</div>
+      <span class="amt">${amt}</span><img src="${ICONS[k]}" alt=""><div class="nm">${NAMES[k]}</div>
       <div class="pct">${pct(lastRes[k][key])}</div></div>`;
   }).join("");
   $("ask").disabled = noSale; $("ask").style.opacity = noSale ? 0.4 : 1;
