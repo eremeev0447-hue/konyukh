@@ -182,6 +182,35 @@ summary::before { content: "▸ "; } details[open] summary::before { content: "�
 .no img { width: 26px; height: 26px; object-fit: contain; }
 .tips { margin: 6px 0 0; padding-left: 18px; line-height: 1.45; }
 .tips li { margin-top: 4px; }
+.sl { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.sl-track { flex: 1; height: 10px; background: #5b5850; border-radius: 1px; position: relative; touch-action: pan-y; }
+.sl-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #b9b4aa; border-radius: 1px; }
+.sl-thumb { position: absolute; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: var(--white);
+  box-shadow: 0 1px 4px rgba(0,0,0,.5); touch-action: none; cursor: grab; }
+.sl-thumb::before { content: ""; position: absolute; inset: -10px; }
+.sl-thumb.drag { transform: scale(1.15); background: #fff; }
+.sl-btn { flex: none; width: 38px; height: 38px; border: 0; border-radius: 2px; background: var(--panel-2); color: var(--white);
+  font: 700 22px "Roboto Condensed", sans-serif; cursor: pointer; line-height: 1; }
+.sl-btn:active { background: #4a4842; }
+.apptabs button { font-size: 14px; padding: 11px 4px; }
+.pgenes { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
+.pg { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.pg .disc { cursor: pointer; }
+.pg .disc.sm { width: 32px; height: 32px; font-size: 15px; }
+.pg .gname { margin-top: -2px; }
+.rowlab { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 6px; }
+.pmark { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+.pmark .lin { cursor: pointer; }
+.presets { display: flex; gap: 6px; }
+.bstats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.bstat { background: #34332e; border-radius: 2px; padding: 10px 8px; }
+.bstat b { display: block; font-size: 26px; color: var(--white); line-height: 1.1; }
+.bstat span { font-size: 12px; color: var(--muted); }
+.gbar { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.gbar .disc { width: 30px; height: 30px; font-size: 15px; flex: none; }
+.gbar .bars { flex: 1; display: flex; height: 22px; border-radius: 2px; overflow: hidden; background: #34332e; }
+.gbar .bars i { display: grid; place-items: center; font-style: normal; font-size: 12px; font-weight: 700; color: #fff; min-width: 0; overflow: hidden; }
+.checks { margin: 6px 0 0; padding-left: 18px; line-height: 1.45; }
 [hidden] { display: none !important; }
 .foot { font-size: 11px; color: var(--muted); text-align: center; margin-top: 14px; }
 </style>
@@ -192,6 +221,7 @@ summary::before { content: "▸ "; } details[open] summary::before { content: "�
 <div class="apptabs" id="apptabs">
   <button class="on" data-app="konyukh">Конюх</button>
   <button data-app="bio">Биогенератор</button>
+  <button data-app="breed">Разведение</button>
 </div>
 <div id="appKonyukh">
 
@@ -219,20 +249,20 @@ summary::before { content: "▸ "; } details[open] summary::before { content: "�
 
   <div class="panel" id="woolPanel" hidden>
     <div class="srow"><span class="cap">Шерсть с собой</span><span class="sval" id="woolVal"></span></div>
-    <input type="range" id="wool" min="0" max="1000" step="10" value="1000">
+    <div id="woolSl"></div>
     <div class="hint" id="woolHint"></div>
   </div>
 
   <div class="panel" id="agePanel">
     <div class="srow"><span class="cap">Age</span><span class="sval" id="ageVal"></span></div>
-    <input type="range" id="age" min="0" max="80" step="0.5" value="8">
+    <div id="ageSl"></div>
     <div class="bar"><i id="lifeFill"></i><b id="lifeMid" style="left:50%"></b></div>
     <div class="hint" id="ageHint"></div>
   </div>
 
   <div class="panel" id="hpPanel">
     <div class="srow"><span class="cap">Здоровье (HP)</span><span class="sval" id="hpVal"></span></div>
-    <input type="range" id="hp" min="0" max="100" step="1" value="100">
+    <div id="hpSl"></div>
     <div class="hint" id="hpHint"></div>
   </div>
 
@@ -322,6 +352,47 @@ summary::before { content: "▸ "; } details[open] summary::before { content: "�
       <li>Пироги дают 2–2,5 топлива, их выгоднее съесть.</li>
       <li>У котла есть электрический выход: даёт сигнал, когда пора мешать. Подключи лампу или сирену.</li>
     </ul>
+  </div>
+</div>
+
+
+<div id="appBreed" hidden>
+  <div class="panel head">
+    <div class="portrait" id="brPortrait"></div>
+    <div>
+      <div class="name">Разведение</div>
+      <div class="species">
+        <button class="chip on" data-bsp="cow">Коровы</button>
+        <button class="chip" data-bsp="sheep">Овцы</button>
+      </div>
+    </div>
+  </div>
+  <div class="panel" id="momCard"></div>
+  <div class="panel" id="dadCard"></div>
+  <div class="panel result">
+    <div class="tab" id="calfTab">Телёнок</div>
+    <div class="rbody">
+      <div class="bstats" id="brStats"></div>
+      <div class="cap" style="margin-top:14px">Гены телёнка</div>
+      <div class="hint" style="margin-top:4px">Какой ген будет виден сверху на панели.</div>
+      <div id="brGenes"></div>
+      <div class="note" id="brNote"></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="cap">Время</div>
+    <div class="stats" id="brTime"></div>
+  </div>
+  <div class="panel">
+    <div class="cap">Когда они спарятся сами</div>
+    <ul class="checks hint">
+      <li>Оба ручные: доверие 300+ у кого-то из игроков.</li>
+      <li>Оба взрослые, мама не беременна, у обоих нет отката.</li>
+      <li>Оба довольны: Food, Water и Personal space выше 50%.</li>
+      <li>HP выше 60%. Упало до 60% — пауза, пока снова не станет 70%.</li>
+      <li>Никто не на верёвке, мама из того же стада, папа рядом (до 30 м).</li>
+    </ul>
+    <div class="hint">Для съёмки: livestock.forcebreed, livestock.makepregnant, livestock.completepregnancy, livestock.ageup.</div>
   </div>
 </div>
 
@@ -490,7 +561,6 @@ function update() {
   $("inbredTag").textContent = S.inbred ? "ИНБРЕД" : "НЕ ИНБРЕД";
   $("inbredTag").classList.toggle("on", S.inbred);
 
-  $("age").max = Math.ceil(LIFE_HOURS * 1.5 * 1.1);
   $("ageVal").textContent = S.age < 1 ? Math.round(S.age * 60) + " MINUTES" : (S.age % 1 ? S.age.toFixed(1) : S.age) + " HOURS";
   $("lifeFill").style.width = c.ageFrac * 100 + "%";
   $("ageHint").innerHTML = `Живёт взрослой ~${Math.round(c.life)} ч (±10%). Прожито ${Math.round(c.ageFrac * 100)}% жизни · ` +
@@ -576,9 +646,9 @@ $("ask").onclick = () => { offerNo = 1; offerRand = rng(Date.now() & 0x7fffffff)
 buildGenes();
 document.querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => { S.sp = b.dataset.sp; haptic(); update(); }));
 $("lineage").addEventListener("click", () => { S.inbred = !S.inbred; haptic(); update(); });
-$("age").addEventListener("input", (e) => { S.age = +e.target.value; update(); });
-$("hp").addEventListener("input", (e) => { S.hp = +e.target.value; update(); });
-$("wool").addEventListener("input", (e) => { S.wool = +e.target.value; update(); });
+Slider($("ageSl"), { min: 0, max: Math.ceil(LIFE_HOURS * 1.5 * 1.1), step: 0.5, btnStep: 1, value: S.age, onInput: (v) => { S.age = v; update(); } });
+Slider($("hpSl"), { min: 0, max: 100, step: 1, btnStep: 5, value: S.hp, onInput: (v) => { S.hp = v; update(); } });
+Slider($("woolSl"), { min: 0, max: 1000, step: 10, btnStep: 50, value: S.wool, onInput: (v) => { S.wool = v; update(); } });
 document.querySelectorAll("#mode button").forEach((b) => b.addEventListener("click", () => {
   S.mode = +b.dataset.m; document.querySelectorAll("#mode button").forEach((x) => x.classList.toggle("on", x === b)); update();
 }));
@@ -625,7 +695,25 @@ function bioList() {
     $("pot").scrollIntoView({ behavior: "smooth", block: "center" });
   });
 }
-function bioUpdate() {
+let selKey = null, slotSlider = null;
+function renderSel() {
+  const s = B.slots[B.sel], key = B.sel + ":" + (s ? s.it.s : "-");
+  if (key !== selKey) {
+    selKey = key;
+    $("selrow").innerHTML = s ? `<div class="srow"><span class="selname">Слот ${B.sel + 1}: ${s.it.ru}</span><span class="sval" id="selN"></span></div>
+      <div id="slotSl"></div>
+      <div class="row between"><span class="hint" style="margin:0" id="selInfo"></span><button class="mini" id="slotDel">Убрать</button></div>`
+      : `<div class="hint">Слот ${B.sel + 1} пустой. Выбери, что положить, в списке ниже.</div>`;
+    slotSlider = s ? Slider($("slotSl"), { min: 1, max: s.it.stack, step: 1, btnStep: 1, value: s.n, onInput: (v) => { s.n = v; bioUpdate(true); } }) : null;
+    if (s) $("slotDel").onclick = () => { B.slots[B.sel] = null; haptic(); bioUpdate(); };
+  }
+  if (s) {
+    $("selN").textContent = s.n;
+    $("selInfo").textContent = `${fmt(s.it.y)} топлива за шт · ${dur(s.it.y * s.n * GEN.interval)}`;
+    slotSlider.set(s.n);
+  }
+}
+function bioUpdate(light) {
   $("bioCats").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.c === B.cat));
   const fuel = B.slots.reduce((a, s) => a + (s ? s.it.y * s.n : 0), 0);
   const time = Math.max(0, ...B.slots.map((s) => (s ? s.it.y * s.n * GEN.interval : 0)));
@@ -634,32 +722,158 @@ function bioUpdate() {
     ? `<img src="${ICONS[s.it.s]}" alt=""><span class="cnt">${s.n}</span>` : `<span class="plus">+</span>`}</div>`).join("") +
     `<div class="arrow">→</div><div class="slot out"><img src="${ICONS.lowgradefuel}" alt=""><span class="cnt">${Math.floor(fuel)}</span></div>`;
   $("pot").querySelectorAll(".slot[data-i]").forEach((el) => el.onclick = () => { B.sel = +el.dataset.i; haptic(); bioUpdate(); });
-  const s = B.slots[B.sel];
-  $("selrow").innerHTML = s ? `<div class="srow"><span class="selname">Слот ${B.sel + 1}: ${s.it.ru}</span><span class="sval">${s.n}</span></div>
-    <input type="range" id="slotN" min="1" max="${s.it.stack}" step="1" value="${s.n}">
-    <div class="row between"><span class="hint" style="margin:0">${fmt(s.it.y)} топлива за шт · ${dur(s.it.y * s.n * GEN.interval)}</span>
-    <button class="mini" id="slotDel">Убрать</button></div>`
-    : `<div class="hint">Слот ${B.sel + 1} пустой. Выбери, что положить, в списке ниже.</div>`;
-  if (s) {
-    $("slotN").oninput = (e) => { s.n = +e.target.value; bioUpdate(); };
-    $("slotDel").onclick = () => { B.slots[B.sel] = null; haptic(); bioUpdate(); };
-  }
+  renderSel();
   $("bioRes").innerHTML = [[Math.floor(fuel), "топлива"], [dur(time), "до конца"], [stirs, stirs % 10 === 1 && stirs % 100 !== 11 ? "помешивание" : [2, 3, 4].includes(stirs % 10) && ![12, 13, 14].includes(stirs % 100) ? "помешивания" : "помешиваний"]]
     .map(([v, t]) => `<div class="res"><b>${v}</b><span>${t}</span></div>`).join("");
   const warns = [];
   if (fuel > GEN.outMax) warns.push(`В выходной слот влезает ${GEN.outMax} топлива: забери его, иначе котёл встанет.`);
   if (stirs > 1) warns.push(`Каждые ${GEN.perStir} топлива котёл просит помешать снова (сигнал на электрическом выходе).`);
   $("bioWarn").innerHTML = warns.map((w) => `<div class="warn">${w}</div>`).join("");
-  bioList();
+  if (!light) bioList();
 }
 let appNow = "konyukh";
 function showApp(a) {
   appNow = a;
-  $("appKonyukh").hidden = a !== "konyukh"; $("appBio").hidden = a !== "bio";
+  $("appKonyukh").hidden = a !== "konyukh"; $("appBio").hidden = a !== "bio"; $("appBreed").hidden = a !== "breed";
   $("apptabs").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.app === a));
   if (a === "bio") bioUpdate();
+  if (a === "breed") brUpdate();
   window.scrollTo(0, 0);
 }
+
+// ---------------------------------------------------------------- sliders that move only when you drag the knob
+function Slider(host, o) {
+  host.className = "sl";
+  host.innerHTML = `<button class="sl-btn" data-d="-1">−</button><div class="sl-track"><div class="sl-fill"></div><div class="sl-thumb"></div></div><button class="sl-btn" data-d="1">+</button>`;
+  const track = host.querySelector(".sl-track"), fill = host.querySelector(".sl-fill"), thumb = host.querySelector(".sl-thumb");
+  const st = { min: o.min, max: o.max, step: o.step || 1, btn: o.btnStep || o.step || 1, value: o.value };
+  function draw() {
+    const f = st.max > st.min ? (st.value - st.min) / (st.max - st.min) : 0;
+    fill.style.width = f * 100 + "%"; thumb.style.left = f * 100 + "%";
+  }
+  function set(v, fire) {
+    v = st.min + Math.round((v - st.min) / st.step) * st.step;
+    v = +Math.min(st.max, Math.max(st.min, v)).toFixed(4);
+    const changed = v !== st.value;
+    st.value = v; draw();
+    if (fire && changed) o.onInput(v);
+  }
+  thumb.addEventListener("pointerdown", (e) => {
+    e.preventDefault(); try { thumb.setPointerCapture(e.pointerId); } catch (err) {} thumb.classList.add("drag");
+    const move = (ev) => { const r = track.getBoundingClientRect(); set(st.min + (ev.clientX - r.left) / r.width * (st.max - st.min), true); };
+    const up = () => { thumb.classList.remove("drag"); thumb.removeEventListener("pointermove", move);
+      thumb.removeEventListener("pointerup", up); thumb.removeEventListener("pointercancel", up); };
+    thumb.addEventListener("pointermove", move); thumb.addEventListener("pointerup", up); thumb.addEventListener("pointercancel", up);
+  });
+  host.querySelectorAll(".sl-btn").forEach((b) => (b.onclick = () => { haptic(); set(st.value + (+b.dataset.d) * st.btn, true); }));
+  draw();
+  return { set: (v) => set(v, false), range(min, max) { st.min = min; st.max = max; set(st.value, false); } };
+}
+
+// ---------------------------------------------------------------- breeding
+const AL = ["red", "grey", "green"];                     // allele 0 Bad, 1 Ok, 2 Good
+const BR = { sp: "cow",
+  mom: { g: [[1, 1], [1, 1], [1, 1], [1, 1], [1, 1]], m: [6, 0] },
+  dad: { g: [[1, 1], [1, 1], [1, 1], [1, 1], [1, 1]], m: [3, 11] } };
+const BR_NAMES = { cow: { mom: "Мама · корова", dad: "Папа · бык", kid: "Телёнок", kids: "телят" },
+                   sheep: { mom: "Мама · овца", dad: "Папа · баран", kid: "Ягнёнок", kids: "ягнят" } };
+const PREGNANT_MIN = 10, CHILD_GROW_S = 3600, GROW_VAR = 0.1, BULL_CD_MIN = 10;
+const brInbred = (p) => p.m[0] === p.m[1];
+function parentCard(key) {
+  const p = BR[key], inb = brInbred(p), N = BR_NAMES[BR.sp];
+  const col = (a) => AL[a];
+  return `<div class="row between"><span class="cap">${N[key]}</span><div class="presets">
+      <button class="mini" data-pre="${key}:2">Идеал</button><button class="mini" data-pre="${key}:1">Сброс</button></div></div>
+    <div class="rowlab"><span>сверху — работает</span><span>снизу — передаётся ${N.kids}</span></div>
+    <div class="pgenes">${GENES.map((g, i) => `<div class="pg">
+      <div class="disc ${col(p.g[i][0])}" data-t="${key}:${i}:0">${g.k}</div>
+      <div class="disc sm ${col(p.g[i][1])}" data-t="${key}:${i}:1">${g.k}</div>
+      <div class="gname">${g.name}</div></div>`).join("")}</div>
+    <div class="pmark"><div class="lin" data-mk="${key}:0">${p.m[0]}</div><div class="lin small" data-mk="${key}:1"
+      style="background:${inb ? "var(--purple)" : "var(--red)"}">${p.m[1]}</div>
+      <div class="hint" style="margin:0">Метки родословной, нажми чтобы сменить цифру</div>
+      <div class="inbred-tag ${inb ? "on" : ""}">${inb ? "ИНБРЕД" : "НЕ ИНБРЕД"}</div></div>`;
+}
+function scaleOf(i, allele, inbred) { return geneScale(GENES[i], AL[allele], inbred); }
+function brCompute() {
+  const mom = BR.mom, dad = BR.dad;
+  // per gene: 4 equally likely (mom copy, dad copy) pairs
+  const genes = GENES.map((g, i) => {
+    const pairs = [];
+    for (const a of mom.g[i]) for (const b of dad.g[i]) pairs.push([a, b]);
+    const exp = [0, 0, 0]; let pure = 0;
+    pairs.forEach(([a, b]) => { exp[Math.max(a, b)] += 0.25; if (a === 2 && b === 2) pure += 0.25; });
+    return { pairs, exp, pure };
+  });
+  let pInb = 0;
+  for (const x of mom.m) for (const y of dad.m) if (x === y) pInb += 0.25;
+  const allGreen = genes.reduce((a, g) => a * g.exp[2], 1);
+  const allPure = genes.reduce((a, g) => a * g.pure, 1);
+  // adult calf quality at full HP and young age: exact over all 4^5 inheritance combos
+  const sp = SPECIES[BR.sp].scale;
+  let pGun = 0, pSar = 0, qMean = 0;
+  const idx = [0, 0, 0, 0, 0];
+  for (let n = 0; n < 1024; n++) {
+    let k = n;
+    for (let i = 0; i < 5; i++) { idx[i] = k & 3; k >>= 2; }
+    const exp = idx.map((j, i) => Math.max(...genes[i].pairs[j]));
+    for (const inb of [false, true]) {
+      const w = (inb ? pInb : 1 - pInb) / 1024;
+      if (!w) continue;
+      const avg = exp.reduce((a, e, i) => a + scaleOf(i, e, inb), 0) / 5;
+      const q = clamp01(sp * avg / Q_FULL);
+      qMean += w * q;
+      if (q >= 0.6) pGun += w; else if (q >= 0.5) pSar += w;
+    }
+  }
+  const momF = scaleOf(3, Math.max(...mom.g[3]), brInbred(mom));
+  const extra = Math.max(0, momF - 1);
+  const twins = Math.min(1, extra);                                  // litter 1 + floor(extra) + (rand < frac)
+  const momCd = CHILD_GROW_S * (1 + GROW_VAR) / momF / 60;
+  return { genes, pInb, allGreen, allPure, pGun, pSar, qMean, twins, momCd };
+}
+const P = (x) => (x > 0 && x < 0.005 ? "<1%" : x > 0.995 && x < 1 ? ">99%" : Math.round(x * 100) + "%");
+function brUpdate() {
+  const N = BR_NAMES[BR.sp];
+  document.querySelectorAll("[data-bsp]").forEach((b) => b.classList.toggle("on", b.dataset.bsp === BR.sp));
+  $("brPortrait").style.backgroundImage = `url(${BR.sp === "cow" ? COW : ICONS.wool})`;
+  $("brPortrait").style.backgroundSize = BR.sp === "cow" ? "cover" : "80%";
+  $("brPortrait").style.backgroundRepeat = "no-repeat"; $("brPortrait").style.backgroundPosition = "center";
+  $("momCard").innerHTML = parentCard("mom"); $("dadCard").innerHTML = parentCard("dad");
+  document.querySelectorAll("[data-t]").forEach((el) => (el.onclick = () => {
+    const [key, i, c] = el.dataset.t.split(":"), g = BR[key].g[+i];
+    g[+c] = { 1: 2, 2: 0, 0: 1 }[g[+c]];                                            // grey → green → red → grey
+    if (g[1] > g[0]) g.reverse();                                                   // the better copy shows on top, like in game
+    haptic(); brUpdate();
+  }));
+  document.querySelectorAll("[data-mk]").forEach((el) => (el.onclick = () => {
+    const [key, c] = el.dataset.mk.split(":"); BR[key].m[+c] = (BR[key].m[+c] + 1) % 16; haptic(); brUpdate();
+  }));
+  document.querySelectorAll("[data-pre]").forEach((el) => (el.onclick = () => {
+    const [key, v] = el.dataset.pre.split(":"); BR[key].g = GENES.map(() => [+v, +v]); haptic(); brUpdate();
+  }));
+  const r = brCompute();
+  $("calfTab").textContent = N.kid;
+  $("brStats").innerHTML = [
+    [P(r.allGreen), "все 5 генов зелёные"],
+    [P(r.allPure), "идеал для разведения: зелёные оба ряда"],
+    [P(r.pGun), BR.sp === "cow" ? "вырастет в корову на пушки у конюха (60%+)" : "вырастет в овцу на пушки у конюха (60%+)"],
+    [P(r.pInb), "родится инбредным"],
+    [P(r.twins), "двойня (решает ген F мамы)"],
+    [Math.round(r.qMean * 100) + "%", "среднее качество взрослого для конюха"],
+  ].map(([v, t]) => `<div class="bstat"><b>${v}</b><span>${t}</span></div>`).join("");
+  $("brGenes").innerHTML = r.genes.map((g, i) => `<div class="gbar"><div class="disc grey">${GENES[i].k}</div><div class="bars">
+    ${[[2, "var(--green)"], [1, "var(--grey)"], [0, "var(--red)"]].map(([a, c]) => g.exp[a] > 0
+      ? `<i style="width:${g.exp[a] * 100}%;background:${c}">${Math.round(g.exp[a] * 100)}%</i>` : "").join("")}</div></div>`).join("");
+  $("brNote").textContent = "Телёнок берёт одну случайную копию гена от мамы и одну от папы, работает лучшая из двух. " +
+    "Поэтому смотри и на нижний ряд: серый снизу может всплыть у " + N.kids + ". Мутаций нет.";
+  $("brTime").innerHTML = [
+    [PREGNANT_MIN + " мин", "беременность"], ["~1 ч", N.kid.toLowerCase() + " растёт"],
+    ["~" + Math.round(r.momCd) + " мин", "откат мамы после родов"], [BULL_CD_MIN + " мин", "откат папы"],
+  ].map(([v, t]) => `<div class="stat"><b>${v}</b><span>${t}</span></div>`).join("");
+}
+document.querySelectorAll("[data-bsp]").forEach((b) => (b.onclick = () => { BR.sp = b.dataset.bsp; haptic(); brUpdate(); }));
+
 bioInit();
 $("apptabs").querySelectorAll("button").forEach((b) => b.onclick = () => { haptic(); showApp(b.dataset.app); });
 </script>
