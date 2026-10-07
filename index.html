@@ -272,7 +272,7 @@ summary::before { content: "▸ "; } details[open] summary::before { content: "�
       <button class="chip on" data-orig="wild">Дикая или купленная</button>
       <button class="chip" data-orig="bred">Родилась от мамы</button>
     </div>
-    <div class="hint">Животное без мамы (дикое или купленное у конюха) конюх оценивает на 20% дешевле.</div>
+    <div class="hint">Животное без мамы (дикое или купленное у конюха) конюх оценивает на 85% дешевле.</div>
   </div>
 
   <div class="panel">
@@ -390,18 +390,19 @@ summary::before { content: "▸ "; } details[open] summary::before { content: "�
   <div class="panel">
     <div class="cap">Когда они спарятся сами</div>
     <ul class="checks hint">
-      <li>Оба ручные: доверие 300+ у кого-то из игроков. Пока доверие ниже 300, оно тает, если ты далеко: 300 очков за 20 минут.</li>
+      <li>Оба полностью привязаны: доверие 900 у кого-то из игроков (около 15 минут рядом). Без тебя доверие тает: 300 очков за 15 минут.</li>
+      <li>На сервере меньше 300 животных этого вида.</li>
       <li>Оба взрослые, мама не беременна, у обоих нет отката.</li>
       <li>Оба довольны: Food, Water и Personal space выше 50%.</li>
       <li>HP выше 60%. Упало до 60% — пауза, пока снова не станет 70%.</li>
       <li>Никто не на верёвке, мама из того же стада, папа рядом (до 30 м).</li>
     </ul>
-    <div class="hint">Телёнок рождается сразу ручным для тех, к кому мама была привязана (доверие 300+).</div>
+    <div class="hint">Телёнок рождается ручным для тех, у кого с мамой доверие 300+ (ему достаётся до 300). Чтобы разводить уже его, набери 900.</div>
     <div class="hint">Для съёмки: livestock.forcebreed, livestock.makepregnant, livestock.completepregnancy, livestock.ageup.</div>
   </div>
 </div>
 
-  <div class="foot">Обновлено 01.10.2026 · формулы и таблицы из файлов игры, Rust Staging</div>
+  <div class="foot">Обновлено 07.10.2026 · формулы и таблицы из файлов игры</div>
 </div>
 
 <script>
@@ -438,7 +439,7 @@ const GUNS = new Set(["rifle.semiauto", "smg.2", "smg.thompson", "pistol.python"
 // LivestockVendor.SaleTable / WoolSaleTable (30.09.2026): entries {item, amount, cost, threshold, maxBudget, chance, roundTo}, fallback, maxStackShare
 const TABLE = {"table": "LivestockVendor.SaleTable", "entries": [{"item": "hq.metal.ore", "amount": 50, "cost": 0.25, "threshold": 0.05, "maxBudget": 1.0, "chance": 0.7, "roundTo": 2}, {"item": "lowgradefuel", "amount": 300, "cost": 0.25, "threshold": 0.05, "maxBudget": 1.0, "chance": 0.8, "roundTo": 20}, {"item": "rifle.semiauto", "amount": 1, "cost": 0.35, "threshold": 0.0, "maxBudget": 1.0, "chance": 0.3, "roundTo": 1}, {"item": "horse.saddle.double", "amount": 1, "cost": 0.08, "threshold": 0.0, "maxBudget": 0.4, "chance": 0.5, "roundTo": 1}, {"item": "horse.saddle.single", "amount": 1, "cost": 0.08, "threshold": 0.0, "maxBudget": 0.4, "chance": 0.5, "roundTo": 1}, {"item": "rope", "amount": 20, "cost": 0.08, "threshold": 0.02, "maxBudget": 0.4, "chance": 0.8, "roundTo": 2}, {"item": "keycard_blue", "amount": 1, "cost": 0.06, "threshold": 0.0, "maxBudget": 0.4, "chance": 0.5, "roundTo": 1}, {"item": "tarp", "amount": 6, "cost": 0.08, "threshold": 0.015, "maxBudget": 0.4, "chance": 0.8, "roundTo": 1}, {"item": "cctv.camera", "amount": 1, "cost": 0.08, "threshold": 0.0, "maxBudget": 0.4, "chance": 0.5, "roundTo": 1}, {"item": "targeting.computer", "amount": 3, "cost": 0.15, "threshold": 0.05, "maxBudget": 0.5, "chance": 0.5, "roundTo": 1}, {"item": "metal.fragments", "amount": 800, "cost": 0.25, "threshold": 0.03, "maxBudget": 1.0, "chance": 0.8, "roundTo": 20}, {"item": "basicblueprintfragment", "amount": 4, "cost": 0.3, "threshold": 0.075, "maxBudget": 1.0, "chance": 0.5, "roundTo": 1}, {"item": "smg.thompson", "amount": 1, "cost": 0.5, "threshold": 0.0, "maxBudget": 1.0, "chance": 0.3, "roundTo": 1}, {"item": "smg.2", "amount": 1, "cost": 0.5, "threshold": 0.0, "maxBudget": 1.0, "chance": 0.3, "roundTo": 1}, {"item": "pistol.python", "amount": 1, "cost": 0.5, "threshold": 0.0, "maxBudget": 1.0, "chance": 0.3, "roundTo": 1}, {"item": "revolver.hc", "amount": 1, "cost": 0.4, "threshold": 0.0, "maxBudget": 1.0, "chance": 0.3, "roundTo": 1}, {"item": "keycard_red", "amount": 1, "cost": 0.75, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.2, "roundTo": 1}, {"item": "door.double.hinged.toptier", "amount": 1, "cost": 0.6, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.4, "roundTo": 1}, {"item": "ammo.pistol", "amount": 100, "cost": 0.7, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.6, "roundTo": 1}, {"item": "ammo.pistol.fire", "amount": 100, "cost": 0.7, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.4, "roundTo": 1}, {"item": "ammo.rifle", "amount": 100, "cost": 0.7, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.4, "roundTo": 1}, {"item": "gears", "amount": 15, "cost": 0.6, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.4, "roundTo": 1}, {"item": "smgbody", "amount": 5, "cost": 0.6, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.4, "roundTo": 1}, {"item": "riflebody", "amount": 5, "cost": 0.6, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.2, "roundTo": 1}], "fallback": {"item": "scrap", "amount": 700, "cost": 1.0, "threshold": 0.0, "maxBudget": 1.0, "chance": 1.0, "roundTo": 5}, "maxStackShare": 0.9, "trailing": 0};
 const WOOL_TABLE = {"table": "LivestockVendor.WoolSaleTable", "entries": [{"item": "hq.metal.ore", "amount": 40, "cost": 0.6, "threshold": 0.05, "maxBudget": 1.0, "chance": 0.7, "roundTo": 2}, {"item": "lowgradefuel", "amount": 300, "cost": 0.5, "threshold": 0.05, "maxBudget": 1.0, "chance": 0.8, "roundTo": 20}, {"item": "horse.saddle.double", "amount": 1, "cost": 0.1, "threshold": 0.0, "maxBudget": 0.4, "chance": 0.5, "roundTo": 1}, {"item": "horse.saddle.single", "amount": 1, "cost": 0.1, "threshold": 0.0, "maxBudget": 0.4, "chance": 0.5, "roundTo": 1}, {"item": "rope", "amount": 15, "cost": 0.1, "threshold": 0.02, "maxBudget": 0.5, "chance": 0.8, "roundTo": 1}, {"item": "keycard_blue", "amount": 1, "cost": 0.08, "threshold": 0.0, "maxBudget": 0.6, "chance": 0.5, "roundTo": 1}, {"item": "tarp", "amount": 5, "cost": 0.1, "threshold": 0.02, "maxBudget": 0.5, "chance": 0.8, "roundTo": 1}, {"item": "cctv.camera", "amount": 1, "cost": 0.1, "threshold": 0.0, "maxBudget": 1.0, "chance": 0.5, "roundTo": 1}, {"item": "targeting.computer", "amount": 2, "cost": 0.2, "threshold": 0.1, "maxBudget": 0.6, "chance": 0.5, "roundTo": 1}, {"item": "metal.fragments", "amount": 600, "cost": 0.5, "threshold": 0.04, "maxBudget": 1.0, "chance": 0.8, "roundTo": 20}, {"item": "basicblueprintfragment", "amount": 3, "cost": 0.7, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.6, "roundTo": 1}, {"item": "ammo.pistol", "amount": 60, "cost": 0.7, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.6, "roundTo": 1}, {"item": "ammo.pistol.fire", "amount": 60, "cost": 0.7, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.4, "roundTo": 1}, {"item": "ammo.rifle", "amount": 60, "cost": 0.7, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.4, "roundTo": 1}, {"item": "door.double.hinged.toptier", "amount": 1, "cost": 0.6, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.4, "roundTo": 1}, {"item": "floor.ladder.hatch.toptier", "amount": 1, "cost": 0.6, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.4, "roundTo": 1}, {"item": "gears", "amount": 10, "cost": 0.6, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.4, "roundTo": 1}, {"item": "smgbody", "amount": 3, "cost": 0.6, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.4, "roundTo": 1}, {"item": "riflebody", "amount": 3, "cost": 0.6, "threshold": 0.12, "maxBudget": 1.0, "chance": 0.3, "roundTo": 1}], "fallback": {"item": "scrap", "amount": 450, "cost": 1.0, "threshold": 0.0, "maxBudget": 1.0, "chance": 1.0, "roundTo": 5}, "maxStackShare": 0.9, "trailing": 0};
-const WOOL_LOT = 400, WOOL_MIN = 25, WILD_PENALTY = 0.2, PICKS = 2, WILD_HP_FLOOR = 0.5;
+const WOOL_LOT = 400, WOOL_MIN = 25, WILD_PENALTY = 0.85, PICKS = 2, WILD_HP_FLOOR = 0.5;
 // produce (prefabs): wool per full shear, milk per milking, cooldowns in seconds, dung interval
 const SHEAR_WOOL = 10, SHEAR_CD = 300, MILK = 1, MILK_CD = 300, DUNG_CD = 600, DUNG_SLOWEST = 3;
 
@@ -576,7 +577,7 @@ function update() {
   $("portrait").style.backgroundPosition = "center";
   document.querySelectorAll(".chip[data-sp]").forEach((b) => b.classList.toggle("on", b.dataset.sp === S.sp));
   document.querySelectorAll(".chip[data-orig]").forEach((b) => b.classList.toggle("on", (b.dataset.orig === "bred") === S.bred));
-  $("originMult").textContent = "×" + c.originF.toFixed(1); $("originMult").classList.toggle("bad", c.originF < 1);
+  $("originMult").textContent = "×" + c.originF.toFixed(2); $("originMult").classList.toggle("bad", c.originF < 1);
   $("woolPanel").hidden = !c.wool; $("agePanel").hidden = c.wool; $("hpPanel").hidden = c.wool; $("originPanel").hidden = c.wool;
   GENES.forEach((g, i) => {
     $("d" + i).className = "disc " + S.genes[i];
@@ -599,7 +600,7 @@ function update() {
   $("hpVal").textContent = `${Math.round(S.hp / 100 * c.sp.hp)} / ${c.sp.hp}`;
   $("hpHint").innerHTML = `<span class="mult ${c.hpF < 0.999 ? "bad" : ""}">×${c.hpF.toFixed(2)}</span>. ` +
     `HP падает, если OVERALL на панели ниже ${Math.round(Math.min(1, c.content) * 100)}% или животное бьют. ` +
-    `Сытое животное восстанавливает HP примерно за час. Выше 80% HP штрафа нет. У неручного животного HP от голода не падает ниже ${Math.round(WILD_HP_FLOOR * 100)}%.`;
+    `Сытое животное восстанавливает HP примерно за час. Выше 80% HP штрафа нет. Если животное ни разу не приручали, HP от голода не падает ниже ${Math.round(WILD_HP_FLOOR * 100)}%.`;
   $("woolVal").textContent = S.wool;
   $("woolHint").innerHTML = S.wool < WOOL_MIN
     ? `<span class="mult bad">Меньше ${WOOL_MIN} конюх не берёт.</span>`
@@ -641,7 +642,7 @@ function update() {
     <div><span>Гены итого</span><span>${Math.round(c.geneAvg / Q_FULL * 100)}%</span></div>
     <div><span>× здоровье</span><span>×${c.hpF.toFixed(2)}</span></div>
     <div><span>× возраст</span><span>×${c.ageF.toFixed(2)}</span></div>
-    <div><span>× происхождение</span><span>×${c.originF.toFixed(1)}</span></div>
+    <div><span>× происхождение</span><span>×${c.originF.toFixed(2)}</span></div>
     ${S.sp === "sheep" ? "<div><span>× овца</span><span>×0.6</span></div>" : ""}
     <div class="tot"><span>Качество</span><span>${Math.round(c.q * 100)}%</span></div>`;
   $("formulaNote").textContent = c.wool
@@ -701,7 +702,7 @@ const dur = (s) => (s >= 3600 ? `${Math.floor(s / 3600)} ч${Math.round((s % 360
 function bioInit() {
   $("bioPortrait").style.backgroundImage = `url(${ICONS["generator.biofuel"]})`;
   $("bioStats").innerHTML = [
-    [GEN.power, "электричества"], [GEN.slots, "слота под еду"], [GEN.interval + " с", "на 1 топливо"], [GEN.perStir, "топлива за помешивание"],
+    [GEN.power, "электричества при варке"], [GEN.slots, "слота под еду"], [GEN.interval + " с", "на 1 топливо"], [GEN.perStir, "топлива за помешивание"],
   ].map(([v, t]) => `<div class="stat"><b>${v}</b><span>${t}</span></div>`).join("");
   $("bioCraft").innerHTML = `Крафт: 250 фрагментов + 150 дерева, верстак 1. Мешать ${GEN.stirTime} сек, стоя у котла. ` +
     `Топливо за 1 шт = калории / ${GEN.calPerFuel}, но не меньше 1. Слоты работают одновременно.`;
